@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require("discord.js");
 
 module.exports = {
-  category: "Utilities",
+  category: "Utility",
   data: new SlashCommandBuilder()
     .setName("ping")
     .setDescription("Replies with a pong"),
