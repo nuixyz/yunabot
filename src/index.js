@@ -1,6 +1,12 @@
 const fs = require("node:fs");
 const path = require("node:path");
-const { Client, Collection, Events, GatewayIntentBits } = require("discord.js");
+const {
+  Client,
+  Collection,
+  Events,
+  GatewayIntentBits,
+  ActivityType,
+} = require("discord.js");
 const { token } = require("./config.json");
 
 const yunabot = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -29,10 +35,6 @@ for (const folder of commandFolders) {
   }
 }
 
-yunabot.once(Events.ClientReady, (readyClient) => {
-  console.log(`Logged in as ${readyClient.user.tag}`);
-});
-
 yunabot.on(Events.InteractionCreate, async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
@@ -56,6 +58,15 @@ yunabot.on(Events.InteractionCreate, async (interaction) => {
       });
     }
   }
+});
+
+yunabot.once(Events.ClientReady, (client) => {
+  console.log(`Logged in as ${client.user.tag}`);
+
+  client.user.setPresence({
+    activities: [{ name: `with crayuns 🖍️`, type: ActivityType.Playing }],
+    status: "online",
+  });
 });
 
 yunabot.login(token);
