@@ -3,6 +3,8 @@ const path = require("node:path");
 const { REST, Routes } = require("discord.js");
 const { token, clientID, guildID } = require("../config.json");
 
+const mode = process.argv[2] || "global";
+
 const commands = [];
 
 const foldersPath = path.join(__dirname, "..", "commands");
@@ -34,13 +36,26 @@ const rest = new REST().setToken(token);
   try {
     console.log(`Loading ${commands.length} commands...`);
 
-    const data = await rest.put(
-      Routes.applicationGuildCommands(clientID, guildID),
-      { body: commands }
-    );
+    let data;
+    if (mode === "guild") {
+      // Deploy to a specific guild for testing
+      data = await rest.put(
+        Routes.applicationGuildCommands(clientID, guildID),
+        {
+          body: commands,
+        }
+      );
+    } else {
+      // Deploy globally
+      data = await rest.put(Routes.applicationCommands(clientID), {
+        body: commands,
+      });
+    }
 
-    console.log(`Successfully loaded ${data.length} commands.`);
+    console.log(
+      `Successfully loaded ${data.length} application (/) commands in ${mode} mode.`
+    );
   } catch (error) {
-    console.error(error);
+    console.error("Failed to deploy commands:", error);
   }
 })();
