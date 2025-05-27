@@ -42,8 +42,6 @@ module.exports = {
       embed.image = {
         url: imageAttachment.url,
       };
-    } else {
-      embed.setImage(imageAttachment)
     }
 
     try {

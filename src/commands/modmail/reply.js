@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
+const { modmailChannelID } = require("../../config.json");
 
 module.exports = {
   category: "modmail",
@@ -23,18 +24,54 @@ module.exports = {
     const user = interaction.options.getUser("user");
     const message = interaction.options.getString("message");
 
+    let modmailChannel;
     try {
-      await user.send(
-        `You received a reply from the Staff team: \n\n${message}`
+      modmailChannel = await interaction.client.channels.fetch(
+        modmailChannelID
       );
-      await interaction.reply({
-        content: `Reply sent to user ${user.tag}`,
+    } catch (error) {
+      console.error("Error fetching modmail channel:", error);
+      return interaction.reply({
+        content: "Could not find the modmail channel.",
         ephemeral: true,
       });
-    } catch (error) {
-      console.error(error);
+    }
+
+    try {
+      // Send DM to user
+      await user.send({
+        embeds: [
+          {
+            color: 0x2b2d31,
+            title: "📬 Message from Staff",
+            description: message,
+            footer: { text: "Reply via server if needed." },
+            timestamp: new Date(),
+          },
+        ],
+      });
+
       await interaction.reply({
-        content: "⚠️ Couldn't send the message. User may have DMs disabled.",
+        content: `✅ Reply sent to user **${user.tag}**.`,
+        ephemeral: true,
+      });
+
+      //Log the message
+      await modmailChannel.send({
+        content: `**${interaction.user.tag}** replied to **${user.tag}**:`,
+        embeds: [
+          {
+            description: message,
+            color: 0x2b2d31,
+            footer: { text: `Sent by ${interaction.user.tag}` },
+            timestamp: new Date(),
+          },
+        ],
+      });
+    } catch (error) {
+      console.error("Error sending DM or logging to modmail:", error);
+      await interaction.reply({
+        content: "Couldn't send the message. User may have DMs disabled.",
         ephemeral: true,
       });
     }
