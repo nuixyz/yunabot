@@ -1,3 +1,4 @@
+const { ButtonBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js");
 const { modmailChannelID } = require("../config.json");
 
 module.exports = {
@@ -44,8 +45,18 @@ module.exports = {
       };
     }
 
+    const showIdButton = new ButtonBuilder()
+      .setCustomId(`show_userid_${message.author.id}`)
+      .setLabel("Show User ID")
+      .setStyle(ButtonStyle.Secondary);
+
+    const row = new ActionRowBuilder().addComponents(showIdButton);
+
     try {
-      await modmailChannel.send({ embeds: [embed] });
+      await modmailChannel.send({
+        embeds: [embed],
+        components: [row],
+      });
       console.log(
         `Forwarded DM from ${message.author.tag} to modmail channel.`
       );

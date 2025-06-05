@@ -52,7 +52,7 @@ const eventFiles = fs
 for (const file of eventFiles) {
   const filePath = path.join(eventsPath, file);
   const event = require(filePath);
-  console.log(`🧩 Loading event: ${event.name}`);
+  // console.log(`Loading event: ${event.name}`);
   if (event.once) {
     yunabot.once(event.name, (...args) => event.execute(...args));
   } else {

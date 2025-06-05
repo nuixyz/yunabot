@@ -28,6 +28,46 @@ module.exports = {
     const reason =
       interaction.options.getString("reason") ?? "<no reason was provided>";
 
+    const targetMember = await interaction.guild.members
+      .fetch(target.id)
+      .catch(() => null);
+
+    if (!targetMember) {
+      return await interaction.reply({
+        content: "User not found.",
+        ephemeral: true,
+      });
+    }
+
+    if (targetMember.id === interaction.guild.ownerId) {
+      return await interaction.reply({
+        content: "Are you dumb?",
+        ephemeral: true,
+      });
+    }
+
+    const botMember = interaction.guild.members.me;
+    if (
+      targetMember.roles.highest.position >= botMember.roles.highest.position
+    ) {
+      return await interaction.reply({
+        content: "Cannot ban admin.",
+        ephemeral: true,
+      });
+    }
+
+    const commandUser = interaction.member;
+    if (
+      targetMember.roles.highest.position >=
+        commandUser.roles.highest.position &&
+      commandUser.id !== interaction.guild.ownerId
+    ) {
+      return await interaction.reply({
+        content: "Cannot ban admin.",
+        ephemeral: true,
+      });
+    }
+
     const confirm = new ButtonBuilder()
       .setCustomId("confirm")
       .setLabel("Confirm Ban")
@@ -44,6 +84,7 @@ module.exports = {
       content: `Are you sure you want to ban ${target} for reason: ${reason}?`,
       components: [row],
     });
+
     const filter = (i) => i.user.id === interaction.user.id;
     const collector = interaction.channel.createMessageComponentCollector({
       filter,
@@ -52,14 +93,25 @@ module.exports = {
 
     collector.on("collect", async (i) => {
       if (i.customId === "confirm") {
-        await interaction.guild.members.ban(target, { reason });
+        try {
+          await interaction.guild.members.ban(target, { reason });
+          await i.update({
+            content: `✅ ${target.username} has been banned.`,
+            components: [],
+          });
+          console.log(`${target.tag} was banned by ${interaction.user.tag}`);
+        } catch (error) {
+          console.error("Ban error:", error);
+          await i.update({
+            content: `❌ Failed to ban ${target.username}. Error: ${error.message}`,
+            components: [],
+          });
+        }
+      } else if (i.customId === "cancel") {
         await i.update({
-          content: `${target.username} has been banned.`,
+          content: "❌ Ban cancelled.",
           components: [],
         });
-        console.log(`${target} was banned.`);
-      } else if (i.customId === "cancel") {
-        await i.update({ content: "Ban cancelled.", components: [] });
       }
       collector.stop();
     });
@@ -67,7 +119,7 @@ module.exports = {
     collector.on("end", (collected, reason) => {
       if (reason === "time") {
         interaction.editReply({
-          content: "Ban action timed out.",
+          content: "⏰ Ban action timed out.",
           components: [],
         });
       }
