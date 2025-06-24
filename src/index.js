@@ -1,5 +1,6 @@
 const fs = require("node:fs");
 const path = require("node:path");
+const { WelcomeMembers } = require("./events/welcome");
 const {
   Client,
   Collection,
@@ -14,6 +15,7 @@ const yunabot = new Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildMembers,
     GatewayIntentBits.DirectMessages,
     GatewayIntentBits.MessageContent,
   ],
@@ -60,6 +62,7 @@ for (const file of eventFiles) {
   }
 }
 
+//interaction builder
 yunabot.on(Events.InteractionCreate, async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
@@ -85,6 +88,13 @@ yunabot.on(Events.InteractionCreate, async (interaction) => {
   }
 });
 
+//member welcome
+yunabot.on("guildMemberAdd", (member) => {
+  console.log(`Member joined: ${member.user.tag}`);
+  WelcomeMembers(member, yunabot);
+});
+
+// client ready
 yunabot.once(Events.ClientReady, (client) => {
   console.log(`Logged in as ${client.user.tag}`);
 
