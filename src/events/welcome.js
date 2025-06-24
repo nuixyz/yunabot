@@ -3,9 +3,9 @@ const { EmbedBuilder } = require("discord.js");
 
 async function WelcomeMembers(member, client) {
   const welcomeMessages = [
-    `Welcome to the server! Grab some roles and a crayon ${member.user.tag}! <:yunana_heart:1221000789334560869>`,
-    `I hope you bought some crayons with you ${member.user.tag}`,
-    `It's so nice to have you here! <:wah:1369195996210532372> ${member.user.tag}`,
+    `Welcome to the server! Grab some roles and a crayon! <:yunana_heart:1221000789334560869>`,
+    `I hope you bought some crayons with you`,
+    `It's so nice to have you here! <:wah:1369195996210532372>`,
   ];
 
   const welcomeGifs = [
