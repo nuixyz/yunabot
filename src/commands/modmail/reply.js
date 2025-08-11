@@ -43,17 +43,12 @@ module.exports = {
         embeds: [
           {
             color: 0x2b2d31,
-            title: "📬 Message from Staff",
+            title: "Message from Staff",
             description: message,
             footer: { text: "Reply via server if needed." },
             timestamp: new Date(),
           },
         ],
-      });
-
-      await interaction.reply({
-        content: `✅ Reply sent to user **${user.tag}**.`,
-        ephemeral: true,
       });
 
       //Log the message

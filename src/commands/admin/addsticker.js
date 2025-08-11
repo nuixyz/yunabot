@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 const Sticker = require("../../../models/sticker.js");
 const sharp = require("sharp");
 
@@ -20,7 +20,8 @@ module.exports = {
           "Attach an image or GIF. Supported formats: PNG, JPEG, GIF"
         )
         .setRequired(true)
-    ),
+    )
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
   async execute(interaction) {
     try {
