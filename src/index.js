@@ -1,3 +1,6 @@
+require("dotenv").config();
+const mongoose = require("mongoose");
+
 const fs = require("node:fs");
 const path = require("node:path");
 const { WelcomeMembers } = require("./events/welcome");
@@ -21,6 +24,16 @@ const yunabot = new Client({
   ],
   partials: [Partials.Channel, Partials.Message],
 });
+
+//mongodb connection
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((err) => {
+    console.error("MongoDB connection error:", err);
+  });
 
 yunabot.commands = new Collection();
 

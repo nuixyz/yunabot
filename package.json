@@ -10,6 +10,9 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "discord.js": "^14.19.3"
+    "discord.js": "^14.19.3",
+    "dotenv": "^17.2.1",
+    "mongoose": "^8.17.1",
+    "node-fetch": "^3.3.2"
   }
 }
