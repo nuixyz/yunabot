@@ -11,7 +11,7 @@ module.exports = {
   category: "fun",
   data: new SlashCommandBuilder()
     .setName("liststickers")
-    .setDescription("List all the stickers with previews"),
+    .setDescription("List all the stickers because Kiya can't remember them, honestly, skill issue"),
 
   async execute(interaction) {
     try {
@@ -60,7 +60,6 @@ module.exports = {
           }
         }
 
-        // If no grid content, show message
         if (!gridText.trim()) {
           gridText = "No stickers on this page.";
         }
