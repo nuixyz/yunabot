@@ -118,22 +118,19 @@ module.exports = {
       const embed = {
         color: 0x2b2d31,
         title: "Message from Staff",
-        description: message,
+        description: `\n${message}\n`,
         footer: { text: "Reply via server if needed." },
         timestamp: new Date(),
       };
 
       if (attachments.length > 0) {
-        const attachmentList = attachments
-          .map(
-            (att, index) =>
-              `${index + 1}. ${att.name} (${(att.size / 1024).toFixed(1)}KB)`
-          )
-          .join("\n");
+        const totalSize = attachments.reduce((sum, att) => sum + att.size, 0);
+        const totalSizeKB = (totalSize / 1024).toFixed(1);
+        const attachmentList = `Total size of attachment(s): ${totalSizeKB}KB`;
 
         embed.fields = [
           {
-            name: `📎 Attachments (${attachments.length})`,
+            name: `📎 Attachments included: ${attachments.length}`,
             value: attachmentList,
             inline: false,
           },
@@ -148,7 +145,6 @@ module.exports = {
         content: `**${interaction.user.tag}** replied to **${user.tag}**:`,
         embeds: [
           {
-            // ai code from here
             description: message,
             color: 0x2b2d31,
             footer: { text: `Sent by ${interaction.user.tag}` },

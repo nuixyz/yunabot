@@ -75,50 +75,49 @@ module.exports = {
           name: `${message.author.tag}`,
           icon_url: message.author.displayAvatarURL(),
         },
-        description: message.content || "*No message content*",
+        description: `\n${message.content || "*No message content*"}\n`,
         footer: { text: `User ID: ${message.author.id}` },
         timestamp: new Date(),
       };
 
-      if (imageAttachments.length > 0) {
-        embed.image = {
-          url: imageAttachments[0].url,
-        };
-      }
+      // if (imageAttachments.length > 0) {
+      //   embed.image = {
+      //     url: imageAttachments[0].url,
+      //   };
+      // }
 
       // Add attachment information to embed
       if (attachmentInfo.length > 0) {
-        const attachmentList = attachmentInfo
-          .map((att, index) => {
-            const size = (att.size / 1024).toFixed(1);
-            const type = att.type.split("/")[1]?.toUpperCase() || "FILE";
-            return `${index + 1}. **${att.name}** (${size}KB, ${type})`;
-          })
-          .join("\n");
+        const totalSize = attachmentInfo.reduce(
+          (sum, att) => sum + att.size,
+          0
+        );
+        const totalSizeKB = (totalSize / 1024).toFixed(1);
+        const attachmentList = `Total size of attachment(s): ${totalSizeKB}KB`;
 
         embed.fields = [
           {
-            name: `📎 Attachments (${attachmentInfo.length})`,
+            name: `📎 Attachments included: ${attachmentInfo.length}`,
             value: attachmentList,
             inline: false,
           },
         ];
 
         // If there are multiple images, mention it
-        if (imageAttachments.length > 1) {
-          embed.fields.push({
-            name: "🖼️ Additional Images",
-            value: `${
-              imageAttachments.length - 1
-            } more image(s) attached below`,
-            inline: false,
-          });
-        }
+        // if (imageAttachments.length > 1) {
+        //   embed.fields.push({
+        //     name: "Additional Images",
+        //     value: `${
+        //       imageAttachments.length - 1
+        //     } more image(s) attached with the message`,
+        //     inline: false,
+        //   });
+        // }
 
         // If there are non-image files, mention them
         if (otherAttachments.length > 0) {
           embed.fields.push({
-            name: "📄 Files",
+            name: "Files",
             value: `${otherAttachments.length} file(s) attached`,
             inline: false,
           });
@@ -167,10 +166,10 @@ module.exports = {
         if (message.content || attachments.length > 0) {
           let confirmationMessage =
             "✅ Your message has been received by our staff team.";
-          if (attachments.length > 0) {
-            confirmationMessage += ` We received your ${attachments.length} attachment(s).`;
-          }
-          confirmationMessage += " We'll get back to you soon!";
+          // if (attachments.length > 0) {
+          //   confirmationMessage += ` We received your ${attachments.length} attachment(s).`;
+          // }
+          confirmationMessage += "We'll get back to you soon.";
 
           await message.author.send(confirmationMessage);
         }
