@@ -24,15 +24,6 @@ module.exports = {
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
   async execute(interaction) {
-    if (
-      !interaction.member.permissions.has(PermissionFlagsBits.Administrator)
-    ) {
-      return interaction.reply({
-        content: "You **do not** have permission to use this command.",
-        ephemeral: true,
-      });
-    }
-
     try {
       await interaction.deferReply({ ephemeral: true });
 

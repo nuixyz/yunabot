@@ -21,13 +21,6 @@ module.exports = {
     ),
 
   async execute(interaction) {
-    if (!interaction.member.permissions.has(PermissionFlagsBits.ManageMessages)) {
-      return interaction.reply({
-        content: "You **do not** have permission to use this command.",
-        ephemeral: true,
-      });
-    }
-
     const sayMessage = interaction.options.getString("message");
     const channel = interaction.options.getChannel("channel");
 

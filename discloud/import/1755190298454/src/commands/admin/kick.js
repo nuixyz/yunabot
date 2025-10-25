@@ -12,22 +12,22 @@ module.exports = {
     .setName("kick")
     .setDescription("Kick a user")
     .addUserOption((option) =>
-      option.setName("target").setDescription("Mention user").setRequired(true)
+      option
+        .setName("target")
+        .setDescription("Mention user")
+        .setRequired(true)
     )
     .addStringOption((option) =>
-      option.setName("reason").setDescription("Reason for kicking")
+      option
+        .setName("reason")
+        .setDescription(
+          "Reason for kicking"
+        )
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
     .setDMPermission(false),
 
   async execute(interaction) {
-    if (!interaction.member.permissions.has(PermissionFlagsBits.KickMembers)) {
-      return interaction.reply({
-        content: "You **do not** have permission to use this command.",
-        ephemeral: true,
-      });
-    }
-
     const target = interaction.options.getUser("target");
     const reason =
       interaction.options.getString("reason") ?? "<no reason was provided>";

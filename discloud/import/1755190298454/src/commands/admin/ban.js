@@ -24,13 +24,6 @@ module.exports = {
     .setDMPermission(false),
 
   async execute(interaction) {
-    if (!interaction.member.permissions.has(PermissionFlagsBits.BanMembers)) {
-      return interaction.reply({
-        content: "You **do not** have permission to use this command.",
-        ephemeral: true,
-      });
-    }
-
     const target = interaction.options.getUser("target");
     const reason =
       interaction.options.getString("reason") ?? "<no reason was provided>";
